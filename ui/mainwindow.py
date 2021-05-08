@@ -12,7 +12,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from select_novel_ui.novel import *
+from ui_dialog.novel import *
 from ui import resources_rc
 
 
@@ -1010,7 +1010,7 @@ class Ui_MainWindow(object):
         self.btn_select_exam_info.clicked.connect(self.open_select_exam_info)
     def open_select_novel(self):
         # 创建子窗口实例
-        dialog = Child_select_novel()
+        dialog = Novel_Dialog()
         # 显示子窗口
         dialog.show()
         dialog.exec_()

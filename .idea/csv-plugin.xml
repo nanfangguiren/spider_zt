@@ -38,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\ui_dialog\novel.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\venv\Lib\site-packages\requests\api.py">
           <value>
             <Attribute>
