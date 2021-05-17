@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import *
 
 from ui_dialog.novel import *
 from ui_dialog.exam_info import *
+
 from ui import resources_rc
 
 

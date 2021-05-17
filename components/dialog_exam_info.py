@@ -164,7 +164,7 @@ class Ui_Dialog(object):
         Dialog.setMouseTracking(False)
         Dialog.setTabletTracking(False)
         self.btn_search = QtWidgets.QPushButton(Dialog)
-        self.btn_search.setGeometry(QtCore.QRect(820, 30, 101, 41))
+        self.btn_search.setGeometry(QtCore.QRect(210, 30, 101, 41))
         self.btn_search.setStyleSheet("\n"
 "QPushButton\n"
 "{\n"
@@ -193,18 +193,6 @@ class Ui_Dialog(object):
 "    color:white;\n"
 "}")
         self.btn_search.setObjectName("btn_search")
-        self.edit_search = QtWidgets.QLineEdit(Dialog)
-        self.edit_search.setGeometry(QtCore.QRect(150, 40, 611, 31))
-        self.edit_search.setStyleSheet("QLineEdit\n"
-"{\n"
-"    background-color: rgb(134,183,200);\n"
-"    border:2px solid #5F92B2;\n"
-"    border-radius:3px;\n"
-"}\n"
-"")
-        self.edit_search.setInputMask("")
-        self.edit_search.setText("")
-        self.edit_search.setObjectName("edit_search")
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(30, 110, 72, 15))
         self.label.setObjectName("label")
@@ -233,6 +221,36 @@ class Ui_Dialog(object):
         self.table.horizontalHeader().setHighlightSections(True)
         self.table.horizontalHeader().setSortIndicatorShown(False)
         self.table.horizontalHeader().setStretchLastSection(True)
+        self.btn_download = QtWidgets.QPushButton(Dialog)
+        self.btn_download.setGeometry(QtCore.QRect(660, 30, 101, 41))
+        self.btn_download.setStyleSheet("\n"
+"QPushButton\n"
+"{\n"
+"    background-color: rgb(134,183,200);\n"
+"    border:2px solid rgb(0,255,255);\n"
+"    border-radius:5px;\n"
+"    \n"
+"    \n"
+"    color: rgb(0, 255, 255);\n"
+"}\n"
+"\n"
+"\n"
+"QPushButton:hover\n"
+"{\n"
+"    background-color: rgb(0,130,150);\n"
+"    border:2px solid #5F92B2;\n"
+"    border-radius:5px;\n"
+"    color:white;\n"
+"}\n"
+"\n"
+"QPushButton:hover:pressed\n"
+"{\n"
+"    background-color:rgb(85,170,255);\n"
+"    border:2px solid #3C80B1;\n"
+"    border-radius:5px;\n"
+"    color:white;\n"
+"}")
+        self.btn_download.setObjectName("btn_download")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -240,8 +258,7 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.btn_search.setText(_translate("Dialog", "搜索"))
-        self.edit_search.setPlaceholderText(_translate("Dialog", "请输入关键字"))
+        self.btn_search.setText(_translate("Dialog", "开始爬取"))
         self.label.setText(_translate("Dialog", "输出日志"))
         self.label_2.setText(_translate("Dialog", "爬取信息表"))
         item = self.table.horizontalHeaderItem(0)
@@ -250,4 +267,4 @@ class Ui_Dialog(object):
         item.setText(_translate("Dialog", "作者"))
         item = self.table.horizontalHeaderItem(2)
         item.setText(_translate("Dialog", "操作"))
-
+        self.btn_download.setText(_translate("Dialog", "导出Excel"))
