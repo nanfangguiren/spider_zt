@@ -13,6 +13,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from ui_dialog.novel import *
+from ui_dialog.exam_info import *
 from ui import resources_rc
 
 
@@ -1035,4 +1036,9 @@ class Ui_MainWindow(object):
     # 打开搜索考试调剂信息界面
     def open_select_exam_info(self):
         print("open_select_exam_info")
+        # 创建子窗口实例
+        dialog = Exam_Info_Dialog()
+        # 显示子窗口
+        dialog.show()
+        dialog.exec_()
 

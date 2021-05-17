@@ -30,7 +30,7 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
         self.Threads=[]  # 线程队列
         self.btn_search.clicked.connect(self.select)
         self.table.doubleClicked.connect(self.download_novel)
-    
+        self.table.setHorizontalHeaderLabels(['书名', '作者', '地址'])
       
 
 
@@ -47,7 +47,7 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
         pageStrs = re.findall(pagePattern, response.text)
         for i in range(len(pageStrs)):
             pageStrs[i] = self.main_url + pageStrs[i]  # 得到总的小说页数
-        self.textEdit_select_novel.append("已爬取所有页数")
+        self.edit_log.append("已爬取所有页数")
 
         novel_list = []  # 获取全部小说地址并存到这里面
         for i in range(len(pageStrs)):
@@ -84,17 +84,17 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
                 novel_list.append(l)
             time.sleep(0.3)  # 每0.3秒爬一次
             # 输出日志到界面中
-            self.textEdit_select_novel.append("已爬取第" + str(i + 1) + "页小说，" + "本页一共" + str(min_length) + "本小说")
-        self.textEdit_select_novel.append("共爬取了" + str(len(novel_list)) + "本小说")
+            self.edit_log.append("已爬取第" + str(i + 1) + "页小说，" + "本页一共" + str(min_length) + "本小说")
+        self.edit_log.append("共爬取了" + str(len(novel_list)) + "本小说")
 
     def select(self):
         # # 获取输入行中的信息
         try:
-            self.textEdit_select_novel.append(self.line_select_novel.text())
-            thread_1 = Thread(target=self.download_TXT, args=(self.line_select_novel.text(),))
+            self.edit_log.append(self.edit_search.text())
+            thread_1 = Thread(target=self.download_TXT, args=(self.edit_search.text(),))
             thread_1.start()
         except:
-            self.textEdit_select_novel.append("Error: 无法启动线程")
+            self.edit_log.append("Error: 无法启动线程")
 
     ## 获取一本小说所有页数
     def get_all_page(self, novelUrl, save_path):
@@ -112,7 +112,7 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
 
         # 爬取所有页的章节
         for page in self.page_list:
-            self.textEdit_select_novel.append("获取到" + page[1] + "的地址")
+            self.edit_log.append("获取到" + page[1] + "的地址")
             self.get_page_chapters(page[0], save_path)
 
             time.sleep(0.5)
@@ -145,7 +145,7 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
             for line in content:
                 f.write(line + '\n')
             f.write('\n')
-        self.textEdit_select_novel.append('已下载 ' + title)
+        self.edit_log.append('已下载 ' + title)
 
     def download_novel(self, index):
         row = index.row()
@@ -158,9 +158,9 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
         if save_path == '' or save_path == "C:/":
             return
         save_path = save_path + '/' + novel_name + '.txt'
-        self.textEdit_select_novel.append("下载地址为：" + save_path)
-        self.textEdit_select_novel.append("开始下载：" + novel_name)
-        self.textEdit_select_novel.append("作者：" + novel_author)
+        self.edit_log.append("下载地址为：" + save_path)
+        self.edit_log.append("开始下载：" + novel_name)
+        self.edit_log.append("作者：" + novel_author)
         # 开启新线程
         thread = Thread(target=self.get_all_page, args=(novel_url, save_path))
         # 将此线程设置为守护线程
