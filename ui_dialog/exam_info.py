@@ -38,12 +38,14 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         self.info={}
         self.infos=[]
         self.heads =['发布时间', '学校', '专业', '年级', '招生人数', '招生状态', '具体内容', '原文地址']
-
+        self.edit_log.append("请在上方输入爬取页数")
+        self.edit_log.append("每页有100条调剂信息，最多爬取200页")
 
 
     def download_exam_info(self):
+        page_num=int(self.box_page_num.text())
         try:
-            thread_1 = Thread(target=self.get_urls, args=(self.master_url,10))
+            thread_1 = Thread(target=self.get_urls, args=(self.master_url,page_num))
             thread_1.daemon = 1 ##将此线程设置为守护线程，控制线程结束
             thread_1.start()
             self.Threads.append(thread_1)
@@ -97,7 +99,10 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         # self.info['标题'] = self.list_to_str(title[2]).strip()
         self.info['发布时间'] = self.list_to_str(time[0]).strip()
         self.info['学校'] = self.list_to_str(school[1:]).strip()
-        self.info['专业'] = self.list_to_str(major[1:]).strip()
+        m_s=""
+        for s in major[1:]:
+            m_s=m_s+s.strip()+"   "
+        self.info['专业'] = m_s
         self.info['年级'] = self.list_to_str(grade[1:]).strip()
         self.info['招生人数'] = self.list_to_str(recept_num[1:]).strip()
         self.info['招生状态'] = self.list_to_str(state[1:]).strip()
@@ -122,7 +127,7 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         _state = QTableWidgetItem(self.info['招生状态'])  # 专业
         self.table.setItem(row_cnt, 5, _state)
         _msg = QTableWidgetItem(self.info['具体内容'])  # 发布时间
-        self.table.setItem(row_cnt, 6, _msg)
+        self.table.setItem(row_cnt, 6,_msg)
         _page_url = QTableWidgetItem(self.info['原文地址'])  # 学校
         self.table.setItem(row_cnt, 7, _page_url)
         self.info={}

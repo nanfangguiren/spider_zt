@@ -164,7 +164,7 @@ class Ui_Dialog(object):
         Dialog.setMouseTracking(False)
         Dialog.setTabletTracking(False)
         self.btn_search = QtWidgets.QPushButton(Dialog)
-        self.btn_search.setGeometry(QtCore.QRect(210, 30, 101, 41))
+        self.btn_search.setGeometry(QtCore.QRect(280, 30, 101, 41))
         self.btn_search.setStyleSheet("\n"
 "QPushButton\n"
 "{\n"
@@ -251,6 +251,12 @@ class Ui_Dialog(object):
 "    color:white;\n"
 "}")
         self.btn_download.setObjectName("btn_download")
+        self.box_page_num = QtWidgets.QSpinBox(Dialog)
+        self.box_page_num.setGeometry(QtCore.QRect(180, 40, 71, 31))
+        self.box_page_num.setObjectName("box_page_num")
+        self.label_3 = QtWidgets.QLabel(Dialog)
+        self.label_3.setGeometry(QtCore.QRect(70, 40, 101, 41))
+        self.label_3.setObjectName("label_3")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -268,3 +274,4 @@ class Ui_Dialog(object):
         item = self.table.horizontalHeaderItem(2)
         item.setText(_translate("Dialog", "操作"))
         self.btn_download.setText(_translate("Dialog", "导出Excel"))
+        self.label_3.setText(_translate("Dialog", "输入爬取页数"))

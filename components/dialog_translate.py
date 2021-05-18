@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'dialog_img.ui'
+# Form implementation generated from reading ui file 'dialog_translate.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(1041, 733)
+        Dialog.resize(1003, 708)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -163,9 +163,9 @@ class Ui_Dialog(object):
         Dialog.setPalette(palette)
         Dialog.setMouseTracking(False)
         Dialog.setTabletTracking(False)
-        self.btn_search = QtWidgets.QPushButton(Dialog)
-        self.btn_search.setGeometry(QtCore.QRect(820, 30, 101, 41))
-        self.btn_search.setStyleSheet("\n"
+        self.btn_translate = QtWidgets.QPushButton(Dialog)
+        self.btn_translate.setGeometry(QtCore.QRect(450, 310, 101, 41))
+        self.btn_translate.setStyleSheet("\n"
 "QPushButton\n"
 "{\n"
 "    background-color: rgb(134,183,200);\n"
@@ -192,47 +192,24 @@ class Ui_Dialog(object):
 "    border-radius:5px;\n"
 "    color:white;\n"
 "}")
-        self.btn_search.setObjectName("btn_search")
-        self.edit_search = QtWidgets.QLineEdit(Dialog)
-        self.edit_search.setGeometry(QtCore.QRect(150, 40, 611, 31))
-        self.edit_search.setStyleSheet("QLineEdit\n"
-"{\n"
-"    background-color: rgb(134,183,200);\n"
-"    border:2px solid #5F92B2;\n"
-"    border-radius:3px;\n"
-"}\n"
-"")
-        self.edit_search.setInputMask("")
-        self.edit_search.setText("")
-        self.edit_search.setObjectName("edit_search")
+        self.btn_translate.setObjectName("btn_translate")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(30, 110, 72, 15))
+        self.label.setGeometry(QtCore.QRect(30, 60, 72, 15))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(Dialog)
-        self.label_2.setGeometry(QtCore.QRect(440, 110, 101, 16))
+        self.label_2.setGeometry(QtCore.QRect(470, 270, 101, 16))
         self.label_2.setObjectName("label_2")
-        self.edit_log = QtWidgets.QTextEdit(Dialog)
-        self.edit_log.setEnabled(True)
-        self.edit_log.setGeometry(QtCore.QRect(20, 140, 401, 571))
-        self.edit_log.setObjectName("edit_log")
-        self.table = QtWidgets.QTableWidget(Dialog)
-        self.table.setGeometry(QtCore.QRect(440, 140, 581, 571))
-        self.table.setGridStyle(QtCore.Qt.SolidLine)
-        self.table.setObjectName("table")
-        self.table.setColumnCount(3)
-        self.table.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(2, item)
-        self.table.horizontalHeader().setVisible(True)
-        self.table.horizontalHeader().setCascadingSectionResizes(False)
-        self.table.horizontalHeader().setDefaultSectionSize(185)
-        self.table.horizontalHeader().setHighlightSections(True)
-        self.table.horizontalHeader().setSortIndicatorShown(False)
-        self.table.horizontalHeader().setStretchLastSection(True)
+        self.edit_chinese = QtWidgets.QTextEdit(Dialog)
+        self.edit_chinese.setEnabled(True)
+        self.edit_chinese.setGeometry(QtCore.QRect(20, 90, 401, 571))
+        self.edit_chinese.setObjectName("edit_chinese")
+        self.edit_english = QtWidgets.QTextEdit(Dialog)
+        self.edit_english.setEnabled(True)
+        self.edit_english.setGeometry(QtCore.QRect(570, 90, 401, 571))
+        self.edit_english.setObjectName("edit_english")
+        self.label_3 = QtWidgets.QLabel(Dialog)
+        self.label_3.setGeometry(QtCore.QRect(590, 60, 72, 15))
+        self.label_3.setObjectName("label_3")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -240,14 +217,7 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.btn_search.setText(_translate("Dialog", "搜索"))
-        self.edit_search.setPlaceholderText(_translate("Dialog", "请输入关键字"))
-        self.label.setText(_translate("Dialog", "输出日志"))
-        self.label_2.setText(_translate("Dialog", "爬取信息表"))
-        item = self.table.horizontalHeaderItem(0)
-        item.setText(_translate("Dialog", "书名"))
-        item = self.table.horizontalHeaderItem(1)
-        item.setText(_translate("Dialog", "作者"))
-        item = self.table.horizontalHeaderItem(2)
-        item.setText(_translate("Dialog", "操作"))
-
+        self.btn_translate.setText(_translate("Dialog", "翻译"))
+        self.label.setText(_translate("Dialog", "中文"))
+        self.label_2.setText(_translate("Dialog", "汉译英"))
+        self.label_3.setText(_translate("Dialog", "英文"))

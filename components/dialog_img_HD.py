@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'dialog_img.ui'
+# Form implementation generated from reading ui file 'dialog_img_HD.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(1041, 733)
+        Dialog.resize(905, 724)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -164,7 +164,7 @@ class Ui_Dialog(object):
         Dialog.setMouseTracking(False)
         Dialog.setTabletTracking(False)
         self.btn_search = QtWidgets.QPushButton(Dialog)
-        self.btn_search.setGeometry(QtCore.QRect(820, 30, 101, 41))
+        self.btn_search.setGeometry(QtCore.QRect(680, 20, 101, 41))
         self.btn_search.setStyleSheet("\n"
 "QPushButton\n"
 "{\n"
@@ -193,46 +193,46 @@ class Ui_Dialog(object):
 "    color:white;\n"
 "}")
         self.btn_search.setObjectName("btn_search")
-        self.edit_search = QtWidgets.QLineEdit(Dialog)
-        self.edit_search.setGeometry(QtCore.QRect(150, 40, 611, 31))
-        self.edit_search.setStyleSheet("QLineEdit\n"
-"{\n"
-"    background-color: rgb(134,183,200);\n"
-"    border:2px solid #5F92B2;\n"
-"    border-radius:3px;\n"
-"}\n"
-"")
-        self.edit_search.setInputMask("")
-        self.edit_search.setText("")
-        self.edit_search.setObjectName("edit_search")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(30, 110, 72, 15))
+        self.label.setGeometry(QtCore.QRect(10, 110, 72, 15))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(440, 110, 101, 16))
         self.label_2.setObjectName("label_2")
         self.edit_log = QtWidgets.QTextEdit(Dialog)
         self.edit_log.setEnabled(True)
-        self.edit_log.setGeometry(QtCore.QRect(20, 140, 401, 571))
+        self.edit_log.setGeometry(QtCore.QRect(10, 140, 411, 241))
         self.edit_log.setObjectName("edit_log")
-        self.table = QtWidgets.QTableWidget(Dialog)
-        self.table.setGeometry(QtCore.QRect(440, 140, 581, 571))
-        self.table.setGridStyle(QtCore.Qt.SolidLine)
-        self.table.setObjectName("table")
-        self.table.setColumnCount(3)
-        self.table.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(2, item)
-        self.table.horizontalHeader().setVisible(True)
-        self.table.horizontalHeader().setCascadingSectionResizes(False)
-        self.table.horizontalHeader().setDefaultSectionSize(185)
-        self.table.horizontalHeader().setHighlightSections(True)
-        self.table.horizontalHeader().setSortIndicatorShown(False)
-        self.table.horizontalHeader().setStretchLastSection(True)
+        self.edit_search = QtWidgets.QLineEdit(Dialog)
+        self.edit_search.setGeometry(QtCore.QRect(180, 30, 461, 31))
+        self.edit_search.setFocusPolicy(QtCore.Qt.ClickFocus)
+        self.edit_search.setAccessibleDescription("")
+        self.edit_search.setStyleSheet("QLineEdit\n"
+"{\n"
+"    background-color: rgb(134,183,200);\n"
+"    border:2px solid #5F92B2;\n"
+"    border-radius:3px;\n"
+"}")
+        self.edit_search.setObjectName("edit_search")
+        self.list_img = QtWidgets.QListWidget(Dialog)
+        self.list_img.setGeometry(QtCore.QRect(440, 140, 431, 571))
+        self.list_img.setObjectName("list_img")
+        self.label_img = QtWidgets.QLabel(Dialog)
+        self.label_img.setGeometry(QtCore.QRect(10, 410, 411, 301))
+        self.label_img.setStyleSheet("color: rgb(255, 255, 255);\n"
+"background-color: rgb(255, 255, 255);")
+        self.label_img.setText("")
+        self.label_img.setObjectName("label_img")
+        self.label_4 = QtWidgets.QLabel(Dialog)
+        self.label_4.setGeometry(QtCore.QRect(10, 390, 101, 16))
+        self.label_4.setObjectName("label_4")
+        self.label_3 = QtWidgets.QLabel(Dialog)
+        self.label_3.setGeometry(QtCore.QRect(70, 40, 72, 15))
+        self.label_3.setText("")
+        self.label_3.setObjectName("label_3")
+        self.label_5 = QtWidgets.QLabel(Dialog)
+        self.label_5.setGeometry(QtCore.QRect(100, 30, 51, 21))
+        self.label_5.setObjectName("label_5")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -240,14 +240,8 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.btn_search.setText(_translate("Dialog", "搜索"))
-        self.edit_search.setPlaceholderText(_translate("Dialog", "请输入关键字"))
+        self.btn_search.setText(_translate("Dialog", "开始爬取"))
         self.label.setText(_translate("Dialog", "输出日志"))
         self.label_2.setText(_translate("Dialog", "爬取信息表"))
-        item = self.table.horizontalHeaderItem(0)
-        item.setText(_translate("Dialog", "书名"))
-        item = self.table.horizontalHeaderItem(1)
-        item.setText(_translate("Dialog", "作者"))
-        item = self.table.horizontalHeaderItem(2)
-        item.setText(_translate("Dialog", "操作"))
-
+        self.label_4.setText(_translate("Dialog", "图片显示区域"))
+        self.label_5.setText(_translate("Dialog", "关键字"))

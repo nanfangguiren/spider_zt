@@ -12,9 +12,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from ui_dialog.img_HD import *
 from ui_dialog.novel import *
 from ui_dialog.exam_info import *
-
+from ui_dialog.img import *
 from ui import resources_rc
 
 
@@ -1029,10 +1030,20 @@ class Ui_MainWindow(object):
     # 打开搜索图片界面
     def open_select_picture(self):
         print("open_select_picture")
+        # 创建子窗口实例
+        dialog = Img_Dialog()
+        # 显示子窗口
+        dialog.show()
+        dialog.exec_()
 
     # 打开搜索壁纸界面
     def open_select_HD_picture(self):
         print("open_select_HD_picture")
+        # 创建子窗口实例
+        dialog = Img_Dialog_HD()
+        # 显示子窗口
+        dialog.show()
+        dialog.exec_()
 
     # 打开搜索考试调剂信息界面
     def open_select_exam_info(self):
