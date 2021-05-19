@@ -45,6 +45,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\ui\mainwindow.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\ui_dialog\exam_info.py">
           <value>
             <Attribute>

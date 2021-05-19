@@ -33,7 +33,6 @@ class Img_Dialog_HD(QtWidgets.QDialog,Ui_Dialog):
         self.btn_search.clicked.connect(self.select)  # 关联事件
 
         ## 图片数据
-        self.url = 'http://image.baidu.com/search/acjson?'
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36'}
         self.imgName = ""

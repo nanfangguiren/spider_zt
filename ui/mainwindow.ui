@@ -677,7 +677,7 @@ QStatusBar::item {
 </string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="toolBoxPage1">
      <property name="geometry">
@@ -685,7 +685,7 @@ QStatusBar::item {
        <x>0</x>
        <y>0</y>
        <width>211</width>
-       <height>586</height>
+       <height>551</height>
       </rect>
      </property>
      <property name="acceptDrops">
@@ -907,7 +907,7 @@ QPushButton#transparentButton {
        <x>0</x>
        <y>0</y>
        <width>211</width>
-       <height>586</height>
+       <height>551</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -1250,7 +1250,7 @@ QPushButton#transparentButton {
        <x>0</x>
        <y>0</y>
        <width>211</width>
-       <height>586</height>
+       <height>551</height>
       </rect>
      </property>
      <attribute name="label">
@@ -1359,6 +1359,116 @@ QPushButton#transparentButton {
       </property>
       <property name="text">
        <string>爬取小木虫调剂信息</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_2">
+     <attribute name="label">
+      <string>中英文翻译</string>
+     </attribute>
+     <widget class="QPushButton" name="btn_translate">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>199</width>
+        <height>54</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>199</width>
+        <height>54</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>199</width>
+        <height>54</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+		border-radius: 4px;
+		border: none;
+		width: 75px;
+		height: 25px;
+}
+QPushButton:enabled {
+        background: rgb(68, 69, 73);
+        color: white;
+}
+QPushButton:!enabled {
+        background: rgb(100, 100, 100);
+        color: rgb(200, 200, 200);
+}
+QPushButton:enabled:hover{
+        background: rgb(85, 85, 85);
+}
+QPushButton:enabled:pressed{
+        background: rgb(150, 80, 80);
+}
+
+QPushButton#blueButton {
+        color: white;
+}
+QPushButton#blueButton:enabled {
+        background: rgb(0, 165, 235);
+        color: white;
+}
+QPushButton#blueButton:!enabled {
+        background: gray;
+        color: rgb(200, 200, 200);
+}
+QPushButton#blueButton:enabled:hover {
+        background: rgb(0, 180, 255);
+}
+QPushButton#blueButton:enabled:pressed {
+        background: rgb(0, 140, 215);
+}
+
+QPushButton#selectButton {
+        border: none;
+        border-radius: none;
+        border-left: 1px solid rgb(100, 100, 100);
+        image: url(:/Black/scan);
+        background: transparent;
+        color: white;
+}
+QPushButton#selectButton:enabled:hover{
+        background: rgb(85, 85, 85);
+}
+QPushButton#selectButton:enabled:pressed{
+        background: rgb(80, 80, 80);
+}
+
+QPushButton#linkButton {
+        background: transparent;
+        color: rgb(0, 160, 230);
+        text-align:left;
+}
+QPushButton#linkButton:hover {
+        color: rgb(20, 185, 255);
+        text-decoration: underline;
+}
+QPushButton#linkButton:pressed {
+        color: rgb(0, 160, 230);
+}
+
+QPushButton#transparentButton {
+        background: transparent;
+}
+
+</string>
+      </property>
+      <property name="text">
+       <string>中英文翻译</string>
       </property>
      </widget>
     </widget>

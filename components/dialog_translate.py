@@ -194,7 +194,7 @@ class Ui_Dialog(object):
 "}")
         self.btn_translate.setObjectName("btn_translate")
         self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(30, 60, 72, 15))
+        self.label.setGeometry(QtCore.QRect(30, 60, 331, 16))
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(470, 270, 101, 16))
@@ -218,6 +218,6 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.btn_translate.setText(_translate("Dialog", "翻译"))
-        self.label.setText(_translate("Dialog", "中文"))
+        self.label.setText(_translate("Dialog", "输入翻译内容，英文或中文"))
         self.label_2.setText(_translate("Dialog", "汉译英"))
-        self.label_3.setText(_translate("Dialog", "英文"))
+        self.label_3.setText(_translate("Dialog", "翻译结果"))

@@ -5,7 +5,6 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from ui.mainwindow import Ui_MainWindow
 
-
 class MyWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyWindow, self).__init__(parent)
