@@ -3,6 +3,7 @@
 @Time :  2021-05-16 15:47
 @Author : nanfang
 """
+
 from components.dialog_translate import *
 from PyQt5 import  QtWidgets
 import urllib.request

@@ -3,18 +3,24 @@
 @Time :  2021-05-08 15:31
 @Author : nanfang
 """
+import os
+import threading
 import time
-from components.dialog import *
-from PyQt5.QtGui import *
+
+from PyQt5.QtCore import QUrl
+from pyecharts.charts import Pie
+from pyecharts import options as opts
+from components.dialog_novel import *
 from PyQt5.QtWidgets import *
 from threading import Thread
 from PyQt5 import QtCore, QtGui, QtWidgets
 import requests
 from lxml import etree
 import re
+from PyQt5.QtWebEngineWidgets import *
 
 
-class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
+class Novel_Dialog(QtWidgets.QDialog, Ui_Dialog):
     def __init__(self):
         super(Novel_Dialog, self).__init__()
         self.setupUi(self)
@@ -27,11 +33,22 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
         self.page_list = []
         self.chapter_list = []
         self.model = ''
-        self.Threads=[]  # 线程队列
+        self.Threads = []  # 线程队列
         self.btn_search.clicked.connect(self.select)
+        self.box_select.currentTextChanged.connect(self.show_data)
         self.table.doubleClicked.connect(self.download_novel)
         self.table.setHorizontalHeaderLabels(['书名', '作者', '地址'])
-      
+        self.btn_analyse.clicked.connect(self.get_dict_urls)
+        # 小说数据分析部分
+        self.ranking_url = "https://m.rmxsba.com/top.html"
+        self.web_title = "热门小说吧"
+        self.save_data_path = ''
+        self.box_data={}
+        self.threadLock=threading.Lock()
+        #网页插件初始化
+        self.browser = QWebEngineView()
+
+
 
 
     # 获取所有的小说名
@@ -131,7 +148,7 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
             l.append(chapter_name[i])
             chapter_list.append(l)
         for chapter in chapter_list:
-            time.sleep(0.3)
+            time.sleep(0.5)
             self.download_chapter_text(chapter[0], save_path)
 
     ## 获取本章节的小说内容，并下载
@@ -169,3 +186,87 @@ class Novel_Dialog(QtWidgets.QDialog,Ui_Dialog):
         # 将线程加入线程队列
         self.Threads.append(thread)
 
+    ## 统计数据
+    def show_data(self):
+        path=self.box_select.currentData()
+        # 判断文件夹是否存在，不存在则创建一个新的
+        self.browser.load(QUrl(path))
+        self.browser.show()
+    # 得到所有的排行榜信息
+    def get_dict_urls(self) -> dict:
+        self.save_data_path = QFileDialog.getExistingDirectory(self, "请选择存储路径", "C:")
+        if self.save_data_path == '' or self.save_data_path == "C:/":
+            return
+        response = requests.get(self.ranking_url, headers=self.headers, timeout=2)
+        html = etree.HTML(response.text)
+        hrefs = html.xpath('//ul[@class="top"]/li/a/@href')
+        hrefs_msg = html.xpath('//ul[@class="top"]/li/a/text()')
+        rank_urls_dic = dict()
+        for i in range(len(hrefs_msg)):
+            if i < 4:
+                rank_urls_dic["点击榜_" + hrefs_msg[i]] = self.main_url + hrefs[i]
+            elif i == 4 or i == 5 or i == 6 or i == 11:
+                continue
+            elif i == 7:
+                rank_urls_dic["推荐榜_" + hrefs_msg[i]] = self.main_url + hrefs[i]
+            else:
+                rank_urls_dic[hrefs_msg[i]] = self.main_url + hrefs[i]
+        for k, url in rank_urls_dic.items():
+            thread_1 = Thread(target=self.begin_analyse, args=(k, url))
+            thread_1.start()
+        return rank_urls_dic
+
+    def begin_analyse(self, k, url):
+        sort_list = self.get_url_data(url)
+        dic = self.info_nums(sort_list)
+        self.date_analyse_html(k, dic)
+
+    # 示例画图
+    def date_analyse_html(self, html_title: str, dic: dict):
+        key_list = []
+        num_list = []
+        for k, v in dic.items():
+            key_list.append(k)
+            num_list.append(v)
+        pie = (Pie()
+               .add('', [list(z) for z in zip(key_list, num_list)],
+                    radius=["0%", "75%"],
+                    )
+               .set_global_opts(title_opts=opts.TitleOpts(title=self.web_title, subtitle=html_title),
+                                legend_opts=opts.LegendOpts(
+                                    orient="vertical",  # 竖向显示
+                                    pos_left="85%",  # 距离左边85%
+                                    type_="scroll"  # 滚动翻页图例
+                                )
+                                )
+               .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {d}%"))
+               )
+        path = self.save_data_path + '/' + html_title + ".html"
+        self.threadLock.acquire(True)
+        self.box_select.addItem(html_title,path)
+        self.threadLock.release()
+        # self.box_data[html_title]=path
+        pie.render(path)
+        self.edit_log.append(html_title + ".HTML 分析结果下载完成")
+        # print(self.box_data)
+        # # 加载外部的web界面
+
+    # 根据排行榜地址，得到确定排行榜前10页内容
+    def get_url_data(self, url: str) -> list:
+        sort_list = []
+        for i in range(1, 11):
+            self.edit_log.append("开始分析" + url + "中的数据")
+            response = requests.get(url, headers=self.headers, timeout=2)
+            html = etree.HTML(response.text)
+            sort_list.extend(html.xpath(
+                '//ul[@class="list"]/li//p[@class="data"]/span[@class="layui-btn layui-btn-xs layui-btn-radius"]/text()'))
+            url = url.replace("_" + str(i), "_" + str(i + 1))  # 修改地址
+            time.sleep(0.1)
+        return sort_list
+
+    # 统计词频
+    def info_nums(self, sort_list: list) -> dict:
+        dic = dict()
+        for msg in sort_list:
+            dic[msg] = dic.get(msg, 0) + 1
+        return dic
