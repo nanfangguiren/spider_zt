@@ -180,7 +180,7 @@ if __name__ == '__main__':
     songs = crawler.search('青', 5)
     # print(songs)
     for song in songs:
-        crawler.download(song, '.out/Music')
+        crawler.download(song, './out/Music')
 
 
     # timeout = 60

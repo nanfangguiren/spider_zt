@@ -163,6 +163,11 @@ class Bilibili_Spider():
         return data
 
     def download_video(self, video, outdir):
+        # 没有 outdir 则创建
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+            print(f'[info] 创建目录{outdir}')
+
         url = f'https://www.bilibili.com/video/{video["link"]}'
         header = self.headers[random.randint(0, len(self.headers)-1)]
 
@@ -235,6 +240,6 @@ class Bilibili_Spider():
 if __name__ == '__main__':
     parser = Bilibili_Spider()
 
-    videos = parser.parse("斤斤计较军军", './out')
+    videos = parser.parse("斤斤计较军军", './out/Video')
 
-    parser.download_video(videos[0], './out')
+    parser.download_video(videos[0], './out/Video')

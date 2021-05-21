@@ -35,3 +35,12 @@ def load_csv(path):
             data_list.append(data)
 
         return data_list
+
+def dictList2List(data_list, header):
+    out_list = []
+    for data in data_list:
+        row = []
+        for h in header:
+            row.append(data[h])
+        out_list.append(row)
+    return out_list

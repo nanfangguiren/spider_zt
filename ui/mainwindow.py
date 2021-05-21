@@ -18,6 +18,8 @@ from ui_dialog.novel import *
 from ui_dialog.exam_info import *
 from ui_dialog.img import *
 from ui_dialog.translate import *
+from ui_dialog.video import Video_Dialog
+from ui_dialog.music import Music_Dialog
 from ui import resources_rc
 
 class Ui_MainWindow(object):
@@ -1111,10 +1113,16 @@ class Ui_MainWindow(object):
     # 打开搜索电影界面
     def open_select_movie(self):
         print("open_select_movie")
+        dialog = Video_Dialog()
+        dialog.show()
+        dialog.exec_()
 
     # 打开搜索音乐界面
     def open_select_music(self):
         print("open_select_music")
+        dialog = Music_Dialog()
+        dialog.show()
+        dialog.exec_()
 
     # 打开搜索图片界面
     def open_select_picture(self):

@@ -251,3 +251,18 @@ class Ui_Dialog(object):
         item = self.table.horizontalHeaderItem(2)
         item.setText(_translate("Dialog", "操作"))
 
+    # 输出日志信息
+    def print_log(self,text):
+        self.edit_log.append("已爬取所有页数")
+
+    
+    # 填充表格（清空原表格）
+    def fill_table(self, data_list, header):
+        self.table.setColumnCount(len(header))
+        self.table.setHorizontalHeaderLabels(header)
+
+        for i, data in enumerate(data_list):
+            self.table.insertRow(i)
+            for j, item in enumerate(data):
+                self.table.setItem(i, j, QTableWidgetItem(item))
+            
