@@ -35,6 +35,8 @@ class LoginDB():
         cursor = connection.cursor()
         cursor.execute(sql)
         data = cursor.fetchall()
+        if data==():
+            return False
         cursor.close()
         connection.close()
 
@@ -91,7 +93,7 @@ if __name__ == '__main__':
     if db.register('abc', '123456'):
         print('注册成功！')
     else:
-        print('注册失败！')
+        print('注册失败,账号已存在！')
 
     if db.login('abc', 'xxxx'):
         print('登录成功')

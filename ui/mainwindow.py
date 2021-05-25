@@ -17,6 +17,7 @@ from ui_dialog.img_HD import *
 from ui_dialog.novel import *
 from ui_dialog.exam_info import *
 from ui_dialog.img import *
+from ui_dialog.register import Register_Dialog
 from ui_dialog.translate import *
 from ui_dialog.video import Video_Dialog
 from ui_dialog.music import Music_Dialog
@@ -1102,6 +1103,14 @@ class Ui_MainWindow(object):
         self.btn_select_HD_picture.clicked.connect(self.open_select_HD_picture)
         self.btn_select_exam_info.clicked.connect(self.open_select_exam_info)
         self.btn_translate.clicked.connect(self.open_translate)
+        self.action.triggered.connect(self.open_register)
+    def open_register(self):
+        # 创建子窗口实例
+        self.dialog = Register_Dialog()
+        # 显示子窗口
+        self.dialog.show()
+        self.dialog.exec_()
+        pass
     def open_select_novel(self):
         # 创建子窗口实例
         dialog = Novel_Dialog()
