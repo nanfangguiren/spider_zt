@@ -9,6 +9,7 @@ import os
 import click
 from Crypto.Cipher import AES
 from http import cookiejar
+from utils.logger import Logger
 
 requests.adapters.DEFAULT_RETRIES = 5 # 增加重连次数
 
@@ -49,7 +50,7 @@ class Encrypyed():
 
 
 class Netease():
-    def __init__(self, timeout=60, cookie_path='.'):
+    def __init__(self, timeout=60, cookie_path='.', logger=None):
         self.headers = {
             'Accept': '*/*',
             'Accept-Encoding': 'gzip,deflate,sdch',
@@ -66,17 +67,22 @@ class Netease():
         self.download_session = requests.Session()
         self.timeout = timeout
         self.ep = Encrypyed()
+        
+        if logger is None:
+            self.logger = Logger(show_mode='console_only')
+        else:
+            self.logger = logger
 
     def post_request(self, url, params):
         data = self.ep.encrypted_request(params)
         resp = self.session.post(url, data=data, timeout=self.timeout)
         result = resp.json()
         if result['code'] != 200:
-            print('post_request error')
+            self.logger.log('post_request error')
         else:
             return result
 
-    def search(self, song_name, limit=10):
+    def search(self, song_name, limit=10, batch_fill_songs=None):
         # result = self.search(song_name, search_type=1, limit=limit)
 
         url = 'http://music.163.com/weapi/cloudsearch/get/web?csrf_token='
@@ -91,7 +97,7 @@ class Netease():
         result = self.post_request(url, params)
 
         if result['result']['songCount'] <= 0:
-            print('Song {} not existed.'.format(song_name))
+            self.logger.log('Song {} not existed.'.format(song_name))
             return
         
         # 获取有用信息
@@ -134,7 +140,7 @@ class Netease():
         urls = [song['url'] for song in result['data']]
 
         if urls is None:
-            print('Song not available due to copyright issue.')
+            self.logger.log('Song not available due to copyright issue.')
 
         return urls
 
@@ -151,12 +157,12 @@ class Netease():
         if sys.platform == 'win32' or sys.platform == 'cygwin':
             valid_name = re.sub(r'[<>:"/\\|?*]', '', song_name)
             if valid_name != song_name:
-                print('{} will be saved as: {}.mp3'.format(
+                self.logger.log('{} will be saved as: {}.mp3'.format(
                     song_name, valid_name))
                 fpath = os.path.join(folder, f'{valid_name}_{author}.mp3')
 
         if os.path.exists(fpath):
-            print(f'{song_name} has exist!')
+            self.logger.log(f'{song_name} has exist!')
             return
         
         resp = self.download_session.get(
@@ -171,6 +177,8 @@ class Netease():
                     if chunk:
                         song_file.write(chunk)
                         progressbar.update(1024)
+        
+        self.logger.log(f'歌曲【{song_name}】已下载至：{os.path.abspath(folder)}')
 
 
 
@@ -178,7 +186,7 @@ class Netease():
 if __name__ == '__main__':
     crawler = Netease()
     songs = crawler.search('青', 5)
-    # print(songs)
+    # self.logger.log(songs)
     for song in songs:
         crawler.download(song, './out/Music')
 
@@ -200,4 +208,4 @@ if __name__ == '__main__':
     #     for song_num, song_name in enumerate(music_list):
     #         netease.download_song_by_search(song_name, song_num + 1)
     # else:
-    #     print('music_list.txt not exist.')
+    #     self.logger.log('music_list.txt not exist.')

@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from utils.logger import Logger
 
 
 class Ui_Dialog(object):
@@ -234,6 +235,9 @@ class Ui_Dialog(object):
         self.table.horizontalHeader().setSortIndicatorShown(False)
         self.table.horizontalHeader().setStretchLastSection(True)
 
+        # logger
+        self.logger = Logger(self.edit_log, 'both')
+
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -255,14 +259,31 @@ class Ui_Dialog(object):
     def print_log(self,text):
         self.edit_log.append("已爬取所有页数")
 
-    
+    # 清空表格
+    def clear_table(self):
+        self.table.setRowCount(0)
+
     # 填充表格（清空原表格）
     def fill_table(self, data_list, header):
+        self.clear_table()
+        
         self.table.setColumnCount(len(header))
         self.table.setHorizontalHeaderLabels(header)
 
         for i, data in enumerate(data_list):
             self.table.insertRow(i)
             for j, item in enumerate(data):
-                self.table.setItem(i, j, QTableWidgetItem(item))
-            
+                self.table.setItem(i, j, QtWidgets.QTableWidgetItem(item))
+
+    # 批量填充表格（append） 
+    def batch_fill_table(self, data_list, header=None):
+        if header is not None:
+            self.table.setColumnCount(len(header))
+            self.table.setHorizontalHeaderLabels(header)
+        
+        row = self.table.rowCount()
+        for i, data in enumerate(data_list):
+            i = row + i
+            self.table.insertRow(i)
+            for j, item in enumerate(data):
+                self.table.setItem(i, j, QtWidgets.QTableWidgetItem(item))
