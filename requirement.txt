@@ -1,0 +1,1 @@
+pip install urllib3==1.25.11 -i http://pypi.douban.com/simple --trusted-host pypi.douban.com

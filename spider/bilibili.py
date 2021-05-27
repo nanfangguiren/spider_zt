@@ -1,3 +1,5 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from utils.logger import Logger
 import csv
 import time
@@ -24,7 +26,6 @@ sys.path.append(os.path.dirname(__file__))
 
 # 防止因https证书问题报错
 requests.packages.urllib3.disable_warnings()
-
 
 
 class Bilibili_Spider():
@@ -58,6 +59,9 @@ class Bilibili_Spider():
             '3.224.69.117:80',
             '116.117.134.135:8081',
         ]
+
+        self.video_list = []
+        self.link2index = {}
         self.total_page_num = None
         self.save_header = ['link', 'title', 'watch_num',
                             'video_audio_split_flag', 'videoURL', 'audioURL']
@@ -70,12 +74,20 @@ class Bilibili_Spider():
 
         self.random_proxy()
 
-        
     def parse(self, keyword, outdir='./', useold=True, batch_fill_videos=None):
         # 可使用已保存的数据
         path = os.path.join(outdir, f'Bilibili_{keyword}.csv')
         if useold and os.path.exists(path):
             self.video_list = load_csv(path)
+
+            # 生成字典 link2index
+            for i, v in enumerate(self.video_list):
+                self.link2index[v['link']] = i
+
+            # 加载到表格
+            if batch_fill_videos is not None:
+                batch_fill_videos(self.video_list)
+
             self.logger.log(f'已加载旧数据 from {path}')
             return self.video_list
 
@@ -83,7 +95,6 @@ class Bilibili_Spider():
         page_num = 1
         try_times = 0
         self.total_page_num = None
-        video_list = []
 
         self.logger.log(f'开始搜索视频【{keyword}】...')
         while True:
@@ -92,7 +103,7 @@ class Bilibili_Spider():
             part_video_list = self._parse_one_page_(keyword, page_num)
 
             # 某一页错误最多重复执行 3 次
-            if part_video_list is None and try_times < 5:
+            if part_video_list is None and try_times < 3:
                 try_times += 1
                 self.logger.log(f'[再次尝试] page：{page_num} 重试')
                 continue
@@ -102,13 +113,18 @@ class Bilibili_Spider():
 
             page_num += 1
             if part_video_list is not None:
-                video_list.extend(part_video_list)
+                # 生成字典 link2index
+                count = len(self.video_list)
+                for i, v in enumerate(part_video_list):
+                    self.link2index[v['link']] = count + i
+
+                # 扩充 video_list
+                self.video_list.extend(part_video_list)
                 self.logger.log(
-                    f'[成功] page：{page_num-1} 成功加载，已有视频数：{len(video_list)}')
+                    f'[成功] page：{page_num-1} 成功加载，已有视频数：{len(self.video_list)}')
 
             # 总页数
             if self.total_page_num is not None and page_num > self.total_page_num:
-                self.video_list = video_list
                 break
 
         self.logger.log('视频av号已获取，进一步获取视频下载地址...')
@@ -116,12 +132,17 @@ class Bilibili_Spider():
         # 进一步获取视频 URL
         for index, video in enumerate(self.video_list):
             self.random_proxy()
+            time.sleep(np.random.rand()/2 + 0.3)
+
             data = self._parse_video_url_(video['link'])
-            video['videoURL'] = data['videoURL']
-            video['audioURL'] = data['audioURL']
             video['video_audio_split_flag'] = data['video_audio_split_flag']
-            self.logger.log(
-                f'[成功] 已获取视频 {index+1} 下载地址 for 【{video["title"][:20]}...】')
+            video['videoURL'] = data['videoURL']
+            if video['video_audio_split_flag']:
+                video['audioURL'] = data['audioURL']
+
+            log = f'[成功] 已获取视频 {index+1} 下载地址 for 【{video["title"][:20]}...】'
+            self.logger.log(log)
+
             if batch_fill_videos is not None:
                 batch_fill_videos([video])
 
@@ -141,8 +162,8 @@ class Bilibili_Spider():
             res = urllib.request.urlopen(req).read().decode('utf-8')
         except Exception as e:
             self.logger.log(
-                f"[Error] 下载错误 page_num: {page_num}\t关键词：【{keyword}】")
-            return None
+                f"[Error] urllib下载错误 page_num: {page_num}\t关键词：【{keyword}】")
+            res = self.selenium_get(url)
 
         html = etree.HTML(res)
 
@@ -175,12 +196,15 @@ class Bilibili_Spider():
         header = self.header_list[random.randint(0, len(self.header_list)-1)]
         data = {}
 
-        # session = requests.session()
-        # res = session.get(url=url,headers=header,verify=False)
+        try:
+            req = urllib.request.Request(url, headers=header)
+            res = urllib.request.urlopen(req).read()
+            res = gzip.decompress(res).decode('utf-8')
+        except Exception as e:
+            log = f"[Error] urllib下载错误 video_key：【{video_key}】"
+            self.logger.log(log)
+            res = self.selenium_get(url)
 
-        req = urllib.request.Request(url, headers=header)
-        res = urllib.request.urlopen(req).read()
-        res = gzip.decompress(res).decode('utf-8')
         html = etree.HTML(res)
 
         # 获取window.__playinfo__的json对象,[20:]表示截取'window.__playinfo__='后面的json字符串
@@ -203,9 +227,12 @@ class Bilibili_Spider():
 
     def download(self, video, outdir):
         # 没有 outdir 则创建
-        if not os.path.exists(outdir):
-            os.makedirs(outdir)
+        if not os.path.exists(os.path.join(outdir, 'tmp')):
+            os.makedirs(os.path.join(outdir, 'tmp'))
             self.logger.log(f'[info] 创建目录{outdir}')
+        
+        # 根据 link 找到video
+        video = self.video_list[self.link2index[video['link']]]
 
         url = f'https://www.bilibili.com/video/{video["link"]}'
         header = self.header_list[random.randint(0, len(self.header_list)-1)]
@@ -213,9 +240,13 @@ class Bilibili_Spider():
         session = requests.session()
         res = session.get(url=url, headers=header, verify=False)
 
-        v_path = os.path.join(outdir, f'video_{video["title"]}.mp4')
-        a_path = os.path.join(outdir, f'audio_{video["title"]}.mp4')
+        # 去除特殊字符
+        pattern = re.compile(r'[\ \\/:*?"<>|]')
+        title = pattern.sub('_', video["title"])
+        v_path = os.path.join(outdir, 'tmp', f'video_{title}.mp4')
+        a_path = os.path.join(outdir, 'tmp', f'audio_{title}.mp4')
 
+        # 准备完成，开始下载
         self.logger.log('[info] 正在下载视频')
         self._download_file_(
             video_key=video['link'], url=video['videoURL'], path=v_path, session=session)
@@ -227,13 +258,13 @@ class Bilibili_Spider():
                 video_key=video['link'], url=video['audioURL'], path=a_path, session=session)
             self.logger.log('【成功】 下载音频成功')
 
-        self.logger.log('[info] 正在合并视频音频...')
-        merge_video_audio(
-            v_path.encode("utf-8").decode("utf-8"),
-            a_path.encode("utf-8").decode("utf-8"),
-            os.path.join(outdir, f'{video["title"]}.mp4')
-        )
-        self.logger.log('[成功] 合并视频音频成功！')
+            self.logger.log('[info] 正在合并视频音频...')
+            merge_video_audio(
+                v_path.encode("utf-8").decode("utf-8"),
+                a_path.encode("utf-8").decode("utf-8"),
+                os.path.join(outdir, f'{title}.mp4')
+            )
+            self.logger.log('[成功] 合并视频音频调用成功，请至资源管理器查看！')
 
     def _download_file_(self, video_key, url, path, session):
         # 添加请求头键值对,写上 refered:请求来源
@@ -279,6 +310,29 @@ class Bilibili_Spider():
         proxy = urllib.request.ProxyHandler({'http': proxy})
         opener = urllib.request.build_opener(proxy, urllib.request.HTTPHandler)
         urllib.request.install_opener(opener)
+
+    def selenium_get(self, url):
+        try:
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+
+            path = './utils/chromedriver.exe'
+            driver = webdriver.Chrome(
+                executable_path=path,
+                chrome_options=chrome_options
+            )
+            driver.get(url)
+
+            script = "return document.documentElement.outerHTML"
+            res = driver.execute_script(script)
+
+            driver.close()
+            driver.quit()
+
+            return res
+        except Exception as e2:
+            self.logger.log(f"[Error] selenium下载错误")
+            return None
 
 
 if __name__ == '__main__':
