@@ -47,10 +47,8 @@ class Novel_Dialog(QtWidgets.QDialog, Ui_Dialog):
         self.threadLock=threading.Lock()
         #网页插件初始化
         self.browser = QWebEngineView()
-
-
-
-
+        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
     # 获取所有的小说名
     def download_TXT(self, searchkey):
         data = {
@@ -132,7 +130,7 @@ class Novel_Dialog(QtWidgets.QDialog, Ui_Dialog):
             self.edit_log.append("获取到" + page[1] + "的地址")
             self.get_page_chapters(page[0], save_path)
 
-            time.sleep(0.5)
+            time.sleep(1)
 
     def get_page_chapters(self, page_url, save_path):
         ## 获取本页所有章节的地址

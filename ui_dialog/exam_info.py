@@ -8,7 +8,7 @@ import sys
 from threading import Thread
 
 import requests
-from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog, QPushButton
+from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog, QPushButton, QAbstractItemView
 from guiqwt.tests.png_test import app
 from lxml import etree
 import re
@@ -40,7 +40,7 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         self.heads =['发布时间', '学校', '专业', '年级', '招生人数', '招生状态', '具体内容', '原文地址']
         self.edit_log.append("请在上方输入爬取页数")
         self.edit_log.append("每页有100条调剂信息，最多爬取200页")
-
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)#表格不能编辑
 
     def download_exam_info(self):
         page_num=int(self.box_page_num.text())
