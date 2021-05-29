@@ -2,6 +2,7 @@ from components.dialog import *
 from spider.netease import Netease
 from utils.utils import dictList2List
 from threading import Thread
+from PyQt5.QtWidgets import QAbstractItemView
 
 
 class Music_Dialog(QtWidgets.QDialog, Ui_Dialog):
@@ -11,14 +12,13 @@ class Music_Dialog(QtWidgets.QDialog, Ui_Dialog):
 
         self.table.setColumnCount(3)
         self.table.setHorizontalHeaderLabels(['标题', '作者 ', '下载地址'])
+        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         self.spider = Netease(logger=self.logger)
 
         self.btn_search.clicked.connect(self.search)
         self.table.doubleClicked.connect(self.download)
-        # self.table 要设置只读
-
-        
 
     def search(self):
         key = self.edit_search.text()
