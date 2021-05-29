@@ -240,11 +240,10 @@ class Novel_Dialog(QtWidgets.QDialog, Ui_Dialog):
                .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {d}%"))
                )
         path = self.save_data_path + '/' + html_title + ".html"
-        self.threadLock.acquire(True)
         self.box_select.addItem(html_title,path)
-        self.threadLock.release()
         # self.box_data[html_title]=path
         pie.render(path)
+        time.sleep(1.5)
         self.edit_log.append(html_title + ".HTML 分析结果下载完成")
         # print(self.box_data)
         # # 加载外部的web界面
@@ -259,7 +258,7 @@ class Novel_Dialog(QtWidgets.QDialog, Ui_Dialog):
             sort_list.extend(html.xpath(
                 '//ul[@class="list"]/li//p[@class="data"]/span[@class="layui-btn layui-btn-xs layui-btn-radius"]/text()'))
             url = url.replace("_" + str(i), "_" + str(i + 1))  # 修改地址
-            time.sleep(0.1)
+            time.sleep(1.5)
         return sort_list
 
     # 统计词频

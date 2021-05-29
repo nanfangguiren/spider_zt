@@ -8,7 +8,7 @@ import sys
 from threading import Thread
 
 import requests
-from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog, QPushButton, QAbstractItemView
+from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog, QPushButton
 from guiqwt.tests.png_test import app
 from lxml import etree
 import re
@@ -40,7 +40,7 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         self.heads =['发布时间', '学校', '专业', '年级', '招生人数', '招生状态', '具体内容', '原文地址']
         self.edit_log.append("请在上方输入爬取页数")
         self.edit_log.append("每页有100条调剂信息，最多爬取200页")
-        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)#表格不能编辑
+
 
     def download_exam_info(self):
         page_num=int(self.box_page_num.text())
@@ -55,15 +55,26 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         self._async_raise(thread.ident, SystemExit)
     def get_urls(self,url,page_num):
         _num=0#记录页数
-        for i in range(1,page_num+1):
+        i=1
+        while i<page_num+1:
             response = requests.get(url=url.format(i), headers=self.headers).text
             HTML = etree.HTML(response)
-            urls = HTML.xpath('//div[@class="forum_body xmc_line_lr"]/table/tbody//a[@class="a_subject"]/@href')
-            msgs = HTML.xpath('//div[@class="forum_body xmc_line_lr"]/table/tbody//a[@class="a_subject"]/text()')
-            print(urls)
+            try:
+                urls = HTML.xpath('//table/tbody//a[@class="a_subject"]/@href')
+            except:
+                self.edit_log.append("获取失败，重新获取第"+str(i)+"页数据")
+                continue
+            # msgs = HTML.xpath('//div[@class="forum_body xmc_line_lr"]/table/tbody//a[@class="a_subject"]/text()')
             self.edit_log.append("爬取第"+str(i)+"页内容，共" + str(len(urls)) + "条调剂信息")
-            for l in urls:
-                self.get_pag_msg(self.base_url + l)
+            i += 1
+            j=0
+            while j<len(urls):
+                try:
+                    self.get_pag_msg(self.base_url + urls[j])
+                except:
+                    self.edit_log.append("获取失败，重新获取第" + str(_num) + "条数据")
+                    continue
+                j += 1
                 _num += 1
                 self.edit_log.append("获取第" + str(_num) + "条")
                 times.sleep(0.1)
@@ -101,7 +112,7 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         self.info['学校'] = self.list_to_str(school[1:]).strip()
         m_s=""
         for s in major[1:]:
-            m_s=m_s+s.strip()+"   "
+            m_s=m_s+s.strip()+"     "
         self.info['专业'] = m_s
         self.info['年级'] = self.list_to_str(grade[1:]).strip()
         self.info['招生人数'] = self.list_to_str(recept_num[1:]).strip()
@@ -136,3 +147,9 @@ class Exam_Info_Dialog(QtWidgets.QDialog,Ui_Dialog):
         for l in my_list:
             s += str(l)
         return s
+if __name__ == '__main__':
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
+    }
+    response = requests.get('http://muchong.com/f-430-1-threadtype-11-typeid-2304', headers=headers).text
+    print(response)
